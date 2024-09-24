@@ -653,3 +653,50 @@ Es una arquitectura MUCHO MAS COMPLEJA que las monolíticas.
     - Cómo gestiono la consistencia de los datos?
 PERO, me resuleve un huevo de problemas que me encuentro en los sistemas monolíticos.
 Ya está en mi... que decida si me trae cuenta o no.
+
+---
+
+Tengo 800 tomcats en comunicación entre si...
+Securizo las comunicaciones? https
+  Implica:
+    Necesito una CA (Certification Authority) que me firme los certificados
+    Necesito claves publicas y privadas para cada uno de los 800 tomcats... distintas entre si
+    Cada clave publica firmada por la CA metida en un certificado, que configuro en cada Tomcat
+    A cada tomcat además, le pongo su clave privada
+  Y ahora... todo dinámico... Que ahora tengo 800 tomcats, y dentro de 5 minutos, 714 y dentro de una hora: 2000
+
+  De donde??? de dónde sale la la pasta? y el tiempo? y los recursos (sysdamins) para eso? NO HAY NI PASTA, NI TIEMPO, NI RECURSOS
+
+  Y espera... que cada X tiempo (3 meses) hay que regenrar todos los certificados... y volver a instalarlos en todos los tomcats
+
+  De donde??? de dónde sale la pasta? y el tiempo? y los recursos (sysdamins) para eso? NO HAY NI PASTA, NI TIEMPO, NI RECURSOS
+
+  QUE BONITO ESTO DE LOS MICROSERVICIO NO?
+
+  Cuidao... vamos a por otra...
+  Cada tipo de microservicio, tendrá un número variable de instancias en producción: Ahora 6... ahora 60 (CLUSTER)
+  Qué necesito delante del cluster?  BALANCEADOR DE CARGA (OJO... con sus certificados, sus claves...)
+  Y necesito mantener eso. Que si creo 3 instancias nuevas del microservicio de tipo A, el balanceador de carga lo sepa y las incluya en el balanceo
+
+  De donde??? de dónde sale la pasta? y el tiempo? y los recursos (sysdamins) para eso? NO HAY NI PASTA, NI TIEMPO, NI RECURSOS
+
+  Un tomcat se queda cuajado (thread stuck) lo tengo que reiniciar... VAYA CACHO DE SISTEMA DE MONITORIZACION NECESITO NO? 
+
+  Se sube algo a producción y falla. ¿Qué falla?
+  Porque el cliente está llamando a un microservicio A, que llama a un B y aun C y a un D y el D llama al J, P. ¿Dónde está el fallo?
+
+  Así planteado... parece que compensa POCO.
+
+  A problemas nuevos, soluciones nuevas! KUBERNETES + ISTIO
+
+  ISTIO: Nos permite pasar de un service Mess a un service Mesh
+
+Trabajar con microservicios COMPLICA HASTA EL INFINITO Y MAS ALLA la operación del entorno de producción.
+De nuevo, necesito echar mano del concepto de AUTOMATIZACION. POR NECESIDAD... Sin alternativa.
+
+Todo el mundo de los MICROSERVICIOS no sería posible sin los CONTENEDORES.
+
+
+    ARQUITECTURA        METODOLOGÍA        FRAMEWORKS        HERRAMIENTAS        LENGUAJES        CLOUDS
+    Microservicios      Agile              Spring            Kubernetes          Java             AWS
+                                                             Contenedores
