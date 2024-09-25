@@ -1,0 +1,52 @@
+services:
+    db:
+        container_name:             mimariadb #${nombre}
+        image:                      mariadb:11.5
+        environment:
+            MARIADB_ROOT_PASSWORD:  superpassword 
+            MARIADB_DATABASE:       midb 
+            MARIADB_USER:           usuario 
+            MARIADB_PASSWORD:       password 
+        ports:
+                                  - 127.0.0.1:3307:3306 
+        volumes:
+            - /home/ubuntu/environment/datos/mariadb:/var/lib/mysql # PERSISTENCIA
+            - ./mariadb.cnf:/etc/mysql/mariadb.cnf # INYECTAR CONFIGURACION AL CONTENEDOR
+
+# Docker compose habla en lenguaje DECLARATIVO:
+# Te explico como es un contenedor
+# Posteriormente, mediante el comando docker, le decimos a dockerd
+# Lo que debe hace con esto:
+#  - docker compose up    # Crea los contenedores que no existan ya...
+                          # o modifica los que hayan cambiado
+                          # Y los arrancas
+#  - docker compose down  # Para los contenedores que haya de estos y los borras
+#  - docker compose start # Los que ya existan, los arrancas
+#  - docker compose stop
+#  - docker compose restart
+
+# DE NUEVO: TODO ESTO ES PARA ENTORNOS LOCALES: NO VALE PARA PRODUCCION 
+
+# 2 argumentos importantes en docker compose:
+#  -f PATH (detras del docker-compose... antes del verbo): 
+#       Por defecto docker compose busca el fichero docker.compose.yaml en la carpeta actual
+#  -u (al final del todo... y solo despues de up o start)
+#       No muestra los logs y ejecuta los contenedores en segundo plano
+#       Por defecto el comando docker compose:
+#           - Ejecuta los contenedores en primer plano (no libera nunca la terminal)
+#           - Se queda mostrando los logs en tiempo real
+#       Para salir pulsamos CTRL+C. Eso hace un GRACEFUL STOPING de los contenedores
+# Habitualmente la primera vez que ejecutamos un docker compose lo hcemos sin el -d
+# Para ver los logs y que todo arranque bien
+# Si arracó bien, apretamos CTRL+C y ejecutamos de nuevo con -d para que se quede corriendo sin molestar
+
+
+
+#    docker container create --name mimariadb -p 127.0.0.1:3307:3306 \
+#            -e MARIADB_ROOT_PASSWORD=superpassword \
+#            -e MARIADB_DATABASE=midb \
+#            -e MARIADB_USER=usuario \
+#            -e MARIADB_PASSWORD=password \
+#            mariadb:11.5
+# El comando docker habla lenguaje imperativo
+

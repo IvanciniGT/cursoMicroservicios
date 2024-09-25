@@ -1,0 +1,158 @@
+# YAML es un lenguaje MARCADO DE INFORMACION
+# Similar a lo que podría ser JSON o XML
+# Hoy en día se está imponiendo en el mercado.
+# XML lleva años ya medio muerto
+# El JSON se hiczo fuerte con el mundo WEB... pero es muy incómodo para seres humanos
+# YAML se ua hoy en día para todo:
+# - docker
+# - kubernetes
+# - gitlab ci/cd o github ci/cd
+# - ubuntu(red)
+# - ansible
+# - spring (antes el archivo de configuración de spring se metía en un application.properties)
+#          hoy en día tenemos el application.yaml  
+# De hecho en la versión actual de la esceficación de YAML 1.2, YAML Se ha tragado a JSON.
+# Dicho de otra forma, JSON es un subconjunto de YAML
+# Por el nombre podríamos pensar que es similar a XML, a HTML... 
+# es decir que tiene dentro marquitas: tags </>
+# Ni parecido. YAML es un acónimo recursivo: Yaml ain't markup language
+# En un fichero YAML podemos tener MUCHOS DOCUMENTOS YAML
+# Para separar un documento de otro, basta con poner ---
+# Salvo en el primero.
+---
+# Más cosas... los documentos YAML pueden tener COMENTARIOS... ALELUYA !!! MIERDA DE JSON
+# Con el #... Todo lo que haya detrás se considera comentario
+---
+Un documento YAML es UN NODO
+Un nodo puede ser de tipo ESCALAR o DE COLECCION
+---
+# Nodos escalares: Contienen un único valor primitivo:
+# Nodos numéricos
+3
+---
+3.98
+---
+.inf #.Inf .INF -.inf
+---
+# Nodos booleanos
+true # True # TRUE
+---
+false # False FALSE
+---
+# Textos: Con diferencia lo más complejo en YAML
+hola" soy 'un #texto
+---
+"hola\" \n\t\\soy 'un #texto"
+---
+'hola" soy ''un #texto\n\t\\' # LAs contrabarras solo funcionan entre comillas dobles como caracteres de escape
+---
+hola amigo # Al leerlo YAML lo junta con un espacio
+¿como estás? # Y lo mismo pasaría si estuviera entre comillas dobles o simples
+---
+Y si quiero # Enotonces tengo que escribir 2 saltos de linea
+
+respectar el salto de linea???
+---
+# En la práctica, solo usamos esas sintaxis cuando meto textos simplones
+# La sintaxis RECOMENDADA ES sin comillas. Solo cuando haya cosas raras, meter el tipo de comillas que me interese
+---
+# Pero entonces, cuando quiero meter textos multilinea(y nos salen mucho)
+# Para eso hay otras 2 sintaxis diferentes
+# SINTAXIS LITERAL
+|1-
+  Empiezo a escribir mi texto
+ que puede tener caracteres raros: "'\ \\ # lo que sea
+    Y nada cambia al leerse... 
+ Lo único que hará YAML es quitar el sangrado de la primera linea al resto
+ 
+ 
+ 
+ 
+---
+# SINTAXIS FOLDED. Muy similar a la literal
+>1-
+  Empiezo a escribir mi texto
+ que puede tener caracteres raros: "'\ \\ # lo que sea
+    Y nada cambia al leerse... 
+ Lo único que hará YAML es quitar el sangrado de la primera linea al resto
+---
+# YAML junta todas las lineas con espacios en blanco
+# Ideal por ejemplo para cosas como:
+> 
+    docker container create --name mimariadb -p 127.0.0.1:3307:3306
+        -e MARIADB_ROOT_PASSWORD=superpassword
+        -e MARIADB_DATABASE=midb
+        -e MARIADB_USER=usuario
+        -e MARIADB_PASSWORD=password
+        mariadb:11.5
+---
+# Nodos de colección:
+# Listas ordenadas
+- Item 1
+- 33
+- True
+---
+# Una lista tiene subelementos (subnodos), que pueden ser de distintos tipos
+# Puedo tener sublistas
+- Item 1
+- 
+    - 33
+    - True
+---
+- Item 1
+- - 33
+  - True
+---
+# Hay una sintaxis alternativa para listas:
+[Item1, 33, True] # TOTALMENTE DESACONSEJADA
+                  # Está por compatibilidad con JSON
+                  # Pero:
+                  # 1. Para un humano es mucho más compleja de entender
+                  # 2. Al llevarlo a un SCM (git), los sistemas de control 
+                  # de código fuente identifican cambios a nivel de LINEA
+                  # Si cambio un valor, GIT me marca la linea entera. Con la otra sintaxis solo el valor que he cambiado
+# Solo hay un caso válido para esta sintaxis:
+---
+[] # Lista vacia
+---
+# Mapas desordenados (Map, Diccionario, Objeto, Array asociativo)
+# Tablas clave / valor
+clave1: valor1
+clave2:
+    - item1
+    - true
+clave3: 33
+--- # Estos 2 mapas son iguales! los mapas son DESARDENADOS 
+clave1: valor1
+clave3: 33
+clave2:
+    - item1
+    - true
+---
+#Una clave de un mapa tiene un nodo asociado. Ese nodo podría ser otro MAPA:
+clave1: valor1
+clave3: 33
+clave2:
+    - item1
+    - true
+clave4:
+    suclave1:       1 # Por cierto... ahi puedo poner todos los espacios que quiera. YAML SE LOS TRAGA AL LEERLOS
+    subclave2:      2 # Siempre y cuando ponga al menos 1
+# ESTE ES EL TIPO DE DOCUMENTO YAML MAS HABITUAL
+# YAML define una sintaxis
+# CADA PROGRAMA QUE USA YAML impone una estructura de documento:
+# Si a primer nivel me debo encontrar un mapa o una lista.
+# Si es un mapa que claves debe tener, que tipos de datos van asocaidos a cada clave
+# ESO SE HACE MEDIANTE UN ESQUEMA (igual que en XML tenemos ESQUEMAS, antiguamente DTDs)
+# Esos esquemas ya los define cada aplicación que usa yaml
+---
+# NOTA: Hay una sintaxis alternativa para mapas:
+{clave1: 1, clave2: True, clave3: [12,34]} # DESACONSEJADA
+--
+# Solo si quiero representar un MAPA VACIO
+{}
+
+---
+
+{"clave1": 1, "clave2": true, "clave3": [12,34]} # QUE TENGO AQUI UN DOCUMENTO YAML?   SI
+                                                 # Pero también es UN DOCUMENTO JSON
